@@ -14,7 +14,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  RELAY_Toggle();
 }
 
 void RELAY_Init(){
@@ -26,12 +26,15 @@ void RELAY_Init(){
   digitalWrite(R2, OFF);
   digitalWrite(R3, OFF);
   digitalWrite(R4, OFF);
+}
+
+void RELAY_Toggle(){
   digitalWrite(R1, ON);
-  digitalWrite(R2, ON);
-  digitalWrite(R3, ON);
-  digitalWrite(R4, ON);
+  delay(1000);
   digitalWrite(R1, OFF);
+  delay(1000);
+  digitalWrite(R2, ON);
+  delay(1000);
   digitalWrite(R2, OFF);
-  digitalWrite(R3, OFF);
-  digitalWrite(R4, OFF);
+  delay(1000);
 }
