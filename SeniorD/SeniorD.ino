@@ -102,7 +102,13 @@ void sensorRead(int loop){
     ms_from_start = millis();
     if(ms_from_start - ms_last_read_pressure > pressure_interval){
       ms_last_read_pressure = ms_from_start;
+      digitalWrite(Relay2, OFF); //close solenoid to prevent air escape
+      digitalWrite(Relay1, OFF); //turn off compressor
+      delay(250);
       readPressure();
+      digitalWrite(Relay2, ON);
+      digitalWrite(Relay1, ON);
+
     }
     if(ms_from_start - ms_last_read_height > height_interval){
       ms_last_read_height = ms_from_start;
