@@ -28,6 +28,8 @@ Collapse:
 */
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
+#include <Wire.h>
+#include <DFRobot_LIDAR07.h>
 
 //Relay Pin Definition
  int Relay1 = 9; //Compressor 
@@ -36,9 +38,14 @@ Collapse:
  int Relay4 = 6; //Unoccupied
 
 //GPS Pin Definition
- int RXPin = 3;
- int TXPin = 5;
+ int RX_GPS = 3;
+ int TX_GPS = 5;
  int GPSBaud = 9600;
+
+ //ToF Pin Definition
+ int RX_ToF = 0;
+ int TX_ToF = 1;
+ int ToFBaud = 9600;
 
 //Sensor Reading Definition
 int dataPin = A0;
@@ -50,8 +57,13 @@ int height_interval = 5000;
 float pressure;
 float height;
 
- SofwareSerial gps_connection(RXPin, TXPin);
+//GPS Serial Connection
+ SofwareSerial gps_connection(RX_GPS, TX_GPS);
  TinyGPSPlus gps;
+
+ //ToF Serial Conection
+ SoftwareSerial ToF_connection(RX_ToF, TX_ToF);
+ DFRobot_LIDAR07_UART ToF;
 
  #define ON 1;
  #define OFF 0;
@@ -96,18 +108,24 @@ void GPS_Disconnect(){
 
 //Showing process for sensor reading without delay() function
 //need to figure out how we want to implement this with the deployment
-void sensorRead(int loop){
-  int i = 0;  
-  while(i < loop){
+void Deploy(){ 
+  while(pressure < 7.25 && height < 8.0){ //change theses values once they are known
     ms_from_start = millis();
     if(ms_from_start - ms_last_read_pressure > pressure_interval){
       ms_last_read_pressure = ms_from_start;
+      //storing status of compressor and solenoid
+      int statusC = digitalRead(Relay1);
+      int statusR = digitalRead(Relay2);
+      //this statement needs to be changed based off of compressor state at start 
       digitalWrite(Relay2, OFF); //close solenoid to prevent air escape
       digitalWrite(Relay1, OFF); //turn off compressor
       delay(250);
       readPressure();
-      digitalWrite(Relay2, ON);
-      digitalWrite(Relay1, ON);
+      //statements to return compressor and relay to original state
+      if(statusR == 1)
+        digitalWrite(Relay2, ON);
+      if(statusC == 1)
+       digitalWrite(Relay1, ON);
 
     }
     if(ms_from_start - ms_last_read_height > height_interval){
@@ -121,11 +139,11 @@ void sensorRead(int loop){
 //analogRead() will return a value from 0-1023; can be scaled with sensorValue * (sensorRange/1023.0)
 float readPressure(){
   int sensorValue = analogRead(dataPin);
-
+  pressure = sensorValue * (7.25/1023.0); //change this value once we know the sensors total operating range currently set for 7.25psi but range might be 15.2psi
 }
 
 float readHeight(){
-
+  int sensorValue =   ToF.getDistanceMM();
 }
 
 bool atHeight() {
