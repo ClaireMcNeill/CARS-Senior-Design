@@ -1,8 +1,8 @@
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
 
-int RXPin = 3;
-int TXPin = 5;
+int RXPin = 1;
+int TXPin = 2;
 int GPSBaud = 9600;
 
 SoftwareSerial serial_connection(RXPin, TXPin);
