@@ -138,7 +138,7 @@ void Deploy(){
 
 //analogRead() will return a value from 0-1023; can be scaled with sensorValue * (sensorRange/1023.0)
 float readPressure(){
-  int sensorValue = analogRead(dataPin);
+  float sensorValue = analogRead(dataPin);
   pressure = sensorValue * (7.25/1023.0); //change this value once we know the sensors total operating range currently set for 7.25psi but range might be 15.2psi
 }
 
