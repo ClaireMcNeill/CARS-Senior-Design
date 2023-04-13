@@ -11,7 +11,7 @@
 
 #### Pressure Sensor:
 1. Vout -> A0
-2. GND -> 5v
+2. GND -> GND
 3. Vcc -> 5v
 
 #### Relay Module:
