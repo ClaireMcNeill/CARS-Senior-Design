@@ -31,3 +31,18 @@
 6. Empty
 7. GND -> GND
 8. Vcc -> 5v
+
+## Plan for final version:
+1. Initialize GPS, Relay, ToF, and Pressure, WiFi connection
+2. Deployment:
+  -Set solenoids to fill
+  -Start compressor
+  -Run for x amount of time
+  -Check pressure:
+    -Close solenoid, turn off compressor, read analog, check against set value, continue with fill or stop.
+  -loop until deployed
+ 3. Start antenna serial port, pull data, transmit, close port. 
+ 4. Close antenna serial port
+ 5. Open drain for tube
+ 6. Wait for pressure to normalize
+ 7. End
