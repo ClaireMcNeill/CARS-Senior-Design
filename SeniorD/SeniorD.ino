@@ -38,12 +38,12 @@ Collapse:
  int Relay4 = 6; //Unoccupied
 
 //GPS Pin Definition
- int RX_GPS = 3;
- int TX_GPS = 5;
+ int RX_GPS = 0; // GPS needs to run off of 0 and 1
+ int TX_GPS = 1;
  int GPSBaud = 9600;
 
  //ToF Pin Definition
- int RX_ToF = 0;
+ int RX_ToF = 0; // might need to change
  int TX_ToF = 1;
  int ToFBaud = 9600;
 
