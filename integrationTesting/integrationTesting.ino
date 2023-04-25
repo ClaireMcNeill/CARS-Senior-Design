@@ -1,10 +1,19 @@
 #include <SoftwareSerial.h>
 #include <DFRobot_LIDAR07.h>
 #include <TinyGPS++.h>
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 
 #define ON  0
 #define OFF 1
+RF24 nrf(3, 2);
+const byte linkAddress[6] = "link1";
+char data[3];
 
+
+
+/*
 //GPS Antenna Definitions using UART connection
 SoftwareSerial gps_connection(0, 1);
 TinyGPSPlus gps_antenna;
@@ -34,7 +43,7 @@ float readPressure(){
   int sensorValue = analogRead(dataPin);
   pressure = sensorValue * (7.25/1023.0);
 }
-
+*/
 //Relay Definitions
 int R1 = 9;
 int R2 = 8;
@@ -57,20 +66,21 @@ void RELAY_Init(){ //change initial definitions once air system is finalized
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  nrf.begin();
+  nrf.openReadingPipe(0, linkAddress);
+  nrf.startListening();
   RELAY_Init();
-  GPS_Init();
-  TOF_Init();
+  //GPS_Init();
+  //TOF_Init();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.print(F("\nEnter Command: \n1 Read Pressure\n2 Read ToF\n3 Read GPS\n4 Toggle R1\n5 Toggle R2\n6 Toggle R3\n7 Toggle R4\n8 End Program"));
-  while (Serial.available() == 0) {}  //wait for data available
-  char ans = Serial.read();  //read until timeout
-  delay(100);
-  Serial.flush();
-    switch (ans)  {
-      case '1': //read pressure sensor
+  //Serial.print(F("\nEnter Command: \n1 Read Pressure\n2 Read ToF\n3 Read GPS\n4 Toggle R1\n5 Toggle R2\n6 Toggle R3\n7 Toggle R4\n8 End Program"));
+  if(nrf.available()){
+    nrf.read(&data, sizeof(data));
+    switch (data[2])  {
+      /*case '1': //read pressure sensor
         readPressure();
         Serial.println(F("Pressure: "));
         Serial.print(pressure);
@@ -95,6 +105,7 @@ void loop() {
         Serial.println(F("Altitude Feet: "));
         Serial.print(gps_antenna.altitude.feet());
         break;
+        */
       case '4':
         if(digitalRead(R1)==0)
           digitalWrite(R1, OFF);
@@ -125,5 +136,8 @@ void loop() {
       
     }
   delay(1000);
+
+  }
+    
 
 }
