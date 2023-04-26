@@ -13,19 +13,19 @@ char data[3];
 
 
 
-/*
-//GPS Antenna Definitions using UART connection
-SoftwareSerial gps_connection(0, 1);
-TinyGPSPlus gps_antenna;
 
+//GPS Antenna Definitions using UART connection
+//SoftwareSerial gps_connection(0, 1);
+//TinyGPSPlus gps_antenna;
+
+/*
 void GPS_Init(){
   gps_connection.begin(9600);
   Serial.println(F("GPS Antenna Initialized"));
 }
-
+*/
 //ToF Sensor Definitions defined as IIC connection
 DFRobot_LIDAR07_IIC ToF_sensor;
-
 void TOF_Init(){
   ToF_sensor.begin();
   ToF_sensor.setMeasureMode(ToF_sensor.eLidar07Continuous);
@@ -38,28 +38,21 @@ void TOF_Init(){
 //Pressure Sensor Definitions
 int dataPin = A0;
 float pressure = 0;
-
 float readPressure(){
   int sensorValue = analogRead(dataPin);
   pressure = sensorValue * (7.25/1023.0);
 }
-*/
+
 //Relay Definitions
 int R1 = 9;
 int R2 = 8;
-int R3 = 7;
-int R4 = 6;
 
 
 void RELAY_Init(){ //change initial definitions once air system is finalized
   pinMode(R1, OUTPUT);
   pinMode(R2, OUTPUT);
-  pinMode(R3, OUTPUT);
-  pinMode(R4, OUTPUT);
   digitalWrite(R1, OFF);
   digitalWrite(R2, OFF);
-  digitalWrite(R3, OFF);
-  digitalWrite(R4, OFF);
   Serial.println(F("Relays Initialized"));
 }
 
@@ -71,7 +64,7 @@ void setup() {
   nrf.startListening();
   RELAY_Init();
   //GPS_Init();
-  //TOF_Init();
+  TOF_Init();
 }
 
 void loop() {
@@ -80,7 +73,7 @@ void loop() {
   if(nrf.available()){
     nrf.read(&data, sizeof(data));
     switch (data[2])  {
-      /*case '1': //read pressure sensor
+      case '1': //read pressure sensor
         readPressure();
         Serial.println(F("Pressure: "));
         Serial.print(pressure);
@@ -94,18 +87,20 @@ void loop() {
         Serial.print(F("Amplitude:"));
         Serial.println(ToF_sensor.getSignalAmplitude());
         break;
+      /*
       case '3':
+        gps_connection.begin(9600);
         gps_antenna.encode(gps_connection.read());
-        Serial.println(F("Satellite Count: "));
-        Serial.print(gps_antenna.satellites.value());
         Serial.println(F("Lattitude: "));
         Serial.print(gps_antenna.location.lat(), 6);
         Serial.println(F("Longitude: "));
         Serial.print(gps_antenna.location.lng(), 6);
-        Serial.println(F("Altitude Feet: "));
-        Serial.print(gps_antenna.altitude.feet());
+        gps_connection.end();
+        nrf.begin();
+        nrf.openReadingPipe(0, linkAddress);
+        nrf.startListening();
         break;
-        */
+      */
       case '4':
         if(digitalRead(R1)==0)
           digitalWrite(R1, OFF);
@@ -118,24 +113,12 @@ void loop() {
         else
           digitalWrite(R2, ON);
         break;
-      case '6':
-        if(digitalRead(R3)==0)
-          digitalWrite(R3, OFF);
-        else
-          digitalWrite(R3, ON);
-        break;
-      case '7':
-        if(digitalRead(R4)==0)
-          digitalWrite(R4, OFF);
-        else
-          digitalWrite(R4, ON);
-        break;
       case '8':
         exit(0);
         break;
       
     }
-  delay(1000);
+  delay(500);
 
   }
     
