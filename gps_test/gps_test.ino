@@ -7,6 +7,9 @@ int RXPin = 0;
 int TXPin = 1;
 int GPSBaud = 9600;
 
+unsigned int x = 40444;
+unsigned int y = 7401;
+
 SoftwareSerial serial_connection(RXPin, TXPin);
 TinyGPSPlus gps;
 
@@ -22,11 +25,12 @@ void loop() {
   // put your main code here, to run repeatedly:
   Wire.beginTransmission(9);
   gps.encode(serial_connection.read());
-  //char lat[6] = gps.location.lat();
   //Wire.write(gps.location.lat(), 2);
   //Wire.write(gps.location.lng(), 2);
-  int x = 1;
-  Wire.write(x);
+  Serial.println(x);
+  Serial.println(y);
+  Wire.print(x);
+  Wire.print(y);
   Wire.endTransmission();
   delay(2000);
 }

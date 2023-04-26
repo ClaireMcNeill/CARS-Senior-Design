@@ -1,16 +1,20 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
-int x = 0;
+unsigned int x = 0;
 
 void setup() {
   // put your setup code here, to run once:
   Wire.begin(9);
   Serial.begin(9600);
+  Wire.onReceive(receiveEvent);
+}
+
+void receiveEvent(int bytes){
+  x = Wire.read();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  x = Wire.read();
-  Serial.println(x * -1);
+  Serial.println(x);
   delay(2000);
 }
