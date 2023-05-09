@@ -32,7 +32,7 @@
 7. GND -> GND
 8. Vcc -> 5v
 
-#### WiFi Tranceiver (Pinouts the same for Transmitter and Receiver, last pin is unused)
+#### WiFi Transceiver (Pinouts the same for Transmitter and Receiver, last pin is unused)
 1. VCC -> 3.3v
 2. GND -> GND
 3. CE -> 9
