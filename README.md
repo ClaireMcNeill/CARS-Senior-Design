@@ -32,6 +32,15 @@
 7. GND -> GND
 8. Vcc -> 5v
 
+#### WiFi Tranceiver (Pinouts the same for Transmitter and Receiver, last pin is unused)
+1. VCC -> 3.3v
+2. GND -> GND
+3. CE -> 9
+4. CSN -> 8
+5. SCK -> 13
+6. MOSI -> 11
+7. MISO -> 12
+
 ## Plan for final version:
 1. Initialize GPS, Relay, ToF, and Pressure, WiFi connection
 2. Deployment:
